@@ -6,7 +6,8 @@
     >
       <v-col
         cols="12"
-        sm="6"
+        sm="8"
+        md="6"
       >
         <v-card>
           <v-toolbar
@@ -26,7 +27,6 @@
                 v-model="email"
                 required
                 :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'Invalid e-mail']"
-                validate-on-blur
               ></v-text-field>
 
               <v-text-field
@@ -37,15 +37,19 @@
                 type="password"
                 v-model="password"
                 required
-                :rules="[v => !!v || 'Password is required', v => v.length >= 8 || 'Password must be at least 8 characters']"
-                validate-on-blur
+                :rules="[v => !!v || 'Password is required', v => v.length >= 6 || 'Password must be at least 8 characters']"
                 class="mt-2"
               ></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="loginUser()" :disabled="!valid">Login</v-btn>
+            <v-btn
+              color="primary"
+              @click="loginUser()"
+              :disabled="!valid"
+              :loading="loading"
+            >Login</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -62,14 +66,19 @@ export default {
       password: ''
     }
   },
+  computed: {
+    loading () {
+      return this.$store.getters.loading
+    }
+  },
   methods: {
     loginUser () {
       const user = {
-        id: Date.now(),
-        login: this.login,
+        email: this.email,
         password: this.password
       }
-      console.log('user:', user)
+      this.$store.dispatch('loginUser', user)
+        .then(() => this.$router.push('/'))
     }
   }
 }

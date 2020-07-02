@@ -23,18 +23,22 @@
           </v-list-item>
         </template>
 
-        <v-divider></v-divider>
-
-        <v-list-item link>
-          <v-list-item-action>
-            <v-icon>mdi-logout</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>
-              Logout
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <div v-if="user">
+          <v-divider class="mt-3"></v-divider>
+          <v-list-item
+            link
+            @click="logout()"
+          >
+            <v-list-item-action>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                Logout
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
 
       </v-list>
     </v-navigation-drawer>
@@ -45,34 +49,42 @@
       color="blue darken-3"
       dark
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="d-xs-block d-sm-none"></v-app-bar-nav-icon>
       <v-toolbar-title
         style="width: 300px"
         class="ml-0 pl-4"
       >
-        <router-link to="/" tag="span" class="hidden-sm-and-down" style="cursor: pointer">
+        <router-link to="/" tag="span" class="hidden-xs-and-down" style="cursor: pointer">
           Takeoff Staff
         </router-link>
       </v-toolbar-title>
-      <!-- <v-text-field
-        flat
-        solo-inverted
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        class="hidden-sm-and-down"
-      ></v-text-field> -->
       <v-spacer></v-spacer>
 
       <v-btn
         text
         v-for="link of links"
         :key="link.name"
-        :to="link.path">
+        :to="link.path"
+        class="hidden-xs-only hidden-lg-and-up"
+      >
         <v-icon left>{{ link.icon }}</v-icon>
         {{ link.name }}
       </v-btn>
-
+      <v-divider
+        class="ml-4 mr-1 hidden-xs-only hidden-lg-and-up"
+        inset
+        vertical
+        v-if="user"
+      ></v-divider>
+      <v-btn
+        text
+        @click="logout()"
+        v-if="user"
+        class="hidden-xs-only hidden-lg-and-up"
+      >
+      <v-icon left>mdi-logout</v-icon>
+      Logout
+      </v-btn>
     </v-app-bar>
   </div>
 </template>
@@ -84,12 +96,32 @@ export default {
   },
   data: () => ({
     dialog: false,
-    drawer: null,
-    links: [
-      { name: 'Login', icon: 'mdi-login', path: '/' },
-      { name: 'Registration', icon: 'mdi-account-check-outline', path: '/registration' },
-      { name: 'Contacts', icon: 'mdi-contacts-outline', path: '/contacts' }
-    ]
-  })
+    drawer: null
+  }),
+  methods: {
+    logout () {
+      this.$store.dispatch('logoutUser')
+        .then(() => {
+          this.$router.push('/login')
+        })
+    }
+  },
+  computed: {
+    user () {
+      return this.$store.getters.userId
+    },
+    links () {
+      if (this.user) {
+        return [
+          { name: 'Contacts', icon: 'mdi-contacts-outline', path: '/' }
+        ]
+      } else {
+        return [
+          { name: 'Login', icon: 'mdi-login', path: '/Login' },
+          { name: 'Registration', icon: 'mdi-account-check-outline', path: '/registration' }
+        ]
+      }
+    }
+  }
 }
 </script>

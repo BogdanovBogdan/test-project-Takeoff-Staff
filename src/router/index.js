@@ -1,11 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import navigationGuards from './navigationGuards'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
+    name: 'Contacts',
+    component: () => import('../views/Contacts.vue'),
+    beforeEnter: navigationGuards
+  },
+  {
+    path: '/Login',
     name: 'Login',
     component: () => import('../views/Login.vue')
   },
@@ -15,9 +22,8 @@ const routes = [
     component: () => import('../views/Registration.vue')
   },
   {
-    path: '/contacts',
-    name: 'Contacts',
-    component: () => import('../views/Contacts.vue')
+    path: '*',
+    beforeEnter: navigationGuards
   }
 ]
 
