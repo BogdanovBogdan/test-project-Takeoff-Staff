@@ -1,25 +1,13 @@
-# Test task for the company Takeoff Staff
+## Инструкция по запуску приложения
 
+### 1. Скачать архив приложения и разархивировать его
 
-## Project setup
+### 2. Открыть консоль, перейти в папку с приложением, написать команду:
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 3. Далее, для запуска приложения - написать команду
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
